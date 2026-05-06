@@ -1,133 +1,162 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
-
-.card-box{
-background:linear-gradient(90deg,#ADD8E6,#FFFFFF);
-border-radius:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.12);
-padding:25px;
-margin-bottom:20px;
-}
-
-.biggg{
-    background: rgba(7, 27, 12, 0.2);
-    backdrop-filter: blur(10px);
+  .card-box {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
     border-radius: 15px;
-    border: 1px solid rgba(25, 95, 15, 0.3);
-    margin:0px 250px 20px 250px;
-    padding:7px 0px 0px 0px;
-}
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    padding: 25px;
+    margin-bottom: 20px;
+  }
 
-.warning-box{
-background:rgba(255,255,0,0.45);
-color:red;
-font-weight:700;
-padding:10px;
-border-radius:10px;
-text-align:center;
-margin-top:10px;
-display:none;
-}
+  .biggg {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0px 250px 20px 250px;
+    padding: 20px px 20px 0px;
+  }
 
+  .warning-box {
+    background: rgba(255, 255, 0, 0.45);
+    color: red;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+  }
 </style>
 
 <div class="container">
-<div class="biggg">
-<h2 class="text-center mb-4">
-🌾 Crop Recommendation System
-</h2>
-</div>
-<div class="card-box">
+  <div class="biggg">
+    <h2 class="text-center mb-4">🌾 Crop Recommendation System</h2>
+  </div>
+  <div class="card-box">
+    <form action="/cropRecommendation" method="POST" id="cropForm">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Nitrogen (N)</label>
+          <input
+            type="number"
+            name="N"
+            class="form-control"
+            min="0"
+            max="140"
+            required
+          />
+        </div>
 
-<form action="/cropRecommendation" method="POST" id="cropForm">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Phosphorus (P)</label>
+          <input
+            type="number"
+            name="P"
+            class="form-control"
+            min="0"
+            max="145"
+            required
+          />
+        </div>
 
-<div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Potassium (K)</label>
+          <input
+            type="number"
+            name="K"
+            class="form-control"
+            min="0"
+            max="205"
+            required
+          />
+        </div>
+      </div>
 
-<div class="col-md-4 mb-3">
-<label class="form-label">Nitrogen (N)</label>
-<input type="number" name="N" class="form-control" min="0" max="140" required>
-</div>
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Temperature (°C)</label>
+          <input
+            type="number"
+            step="any"
+            name="temperature"
+            class="form-control"
+            min="0"
+            max="60"
+            required
+          />
+        </div>
 
-<div class="col-md-4 mb-3">
-<label class="form-label">Phosphorus (P)</label>
-<input type="number" name="P" class="form-control" min="0" max="145" required>
-</div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Humidity (%)</label>
+          <input
+            type="number"
+            step="any"
+            name="humidity"
+            class="form-control"
+            min="0"
+            max="100"
+            required
+          />
+        </div>
 
-<div class="col-md-4 mb-3">
-<label class="form-label">Potassium (K)</label>
-<input type="number" name="K" class="form-control" min="0" max="205" required>
-</div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">pH Level</label>
+          <input
+            type="number"
+            step="any"
+            name="ph"
+            class="form-control"
+            min="0"
+            max="14"
+            required
+          />
+        </div>
 
-</div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Rainfall (mm)</label>
+          <input
+            type="number"
+            step="any"
+            name="rainfall"
+            class="form-control"
+            min="0"
+            max="300"
+            required
+          />
+        </div>
+      </div>
 
-<div class="row">
+      <div class="text-center">
+        <button type="submit" class="btn btn-success btn-lg">
+          🌾 Predict Crop
+        </button>
+      </div>
+    </form>
 
-<div class="col-md-3 mb-3">
-<label class="form-label">Temperature (°C)</label>
-<input type="number" step="any" name="temperature" class="form-control" min="0" max="60" required>
-</div>
-
-<div class="col-md-3 mb-3">
-<label class="form-label">Humidity (%)</label>
-<input type="number" step="any" name="humidity" class="form-control" min="0" max="100" required>
-</div>
-
-<div class="col-md-3 mb-3">
-<label class="form-label">pH Level</label>
-<input type="number" step="any" name="ph" class="form-control" min="0" max="14" required>
-</div>
-
-<div class="col-md-3 mb-3">
-<label class="form-label">Rainfall (mm)</label>
-<input type="number" step="any" name="rainfall" class="form-control" min="0" max="300" required>
-</div>
-
-</div>
-
-<div class="text-center">
-
-<button type="submit" class="btn btn-success btn-lg">
-🌾 Predict Crop
-</button>
-
-</div>
-
-</form>
-
-<div id="warning" class="warning-box">
-ℹ Please fill all input fields to enable prediction.
-</div>
-
-</div>
-
+    <div id="warning" class="warning-box">
+      ℹ Please fill all input fields to enable prediction.
+    </div>
+  </div>
 </div>
 
 <script>
+  const form = document.getElementById("cropForm");
+  const warning = document.getElementById("warning");
 
-const form = document.getElementById("cropForm");
-const warning = document.getElementById("warning");
+  form.addEventListener("submit", function (e) {
+    let inputs = form.querySelectorAll("input");
 
-form.addEventListener("submit", function(e){
-
-let inputs = form.querySelectorAll("input");
-
-for(let i=0;i<inputs.length;i++){
-
-if(inputs[i].value === ""){
-
-e.preventDefault();
-warning.style.display="block";
-return;
-
-}
-
-}
-
-});
-
+    for (let i = 0; i < inputs.length; i++) {
+      if (inputs[i].value === "") {
+        e.preventDefault();
+        warning.style.display = "block";
+        return;
+      }
+    }
+  });
 </script>
 
 {% endblock %}

@@ -1,120 +1,115 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
 
-.price-container{
-margin-top:40px;
 
-}
-
-
-.biggg{
-    background: rgba(7, 27, 12, 0.2);
-    backdrop-filter: blur(10px);
+  .biggg {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
     border-radius: 15px;
-    border: 1px solid rgba(25, 95, 15, 0.3);
-    margin:0px 250px 20px 250px;
-    padding:7px 0px 0px 0px;
+    text-align: center;
+    margin: 0px 250px 20px 250px;
+    padding: 20px px 20px 0px;
+  }
+
+  .price-card {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(249, 255, 246));
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+  }
+
+.result{
+    margin-top:20px;
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(249, 255, 246));
+    color: rgb(0, 0, 0);
+    padding: 25px;
+    border:none;
+    border-radius: 15px;
+    text-align: center;
+
 }
-
-
-
-.price-card{
-background:linear-gradient(90deg,rgb(172, 206, 218),rgb(249, 255, 246));
-border-radius:15px;
-box-shadow:0 4px 12px rgba(0,0,0,0.2);
-padding:30px;
-}
-
 </style>
 
+<div class="container">
+  <div class="biggg">
+    <h2 class="text-center mb-4">📈 Crop Price Prediction</h2>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="price-card">
+        <form method="POST">
+          <label class="form-label">Select Crop</label>
+          <select name="crop" class="form-control" required>
+            <option value="">Select Crop</option>
 
-<div class="container price-container">
-<div class="biggg">
-<h2 class="text-center mb-4">📈 Crop Price Prediction</h2>
-</div>
-<div class="row justify-content-center">
+            <option value="Rice">Rice</option>
+            <option value="Wheat">Wheat</option>
+            <option value="Maize">Maize</option>
+            <option value="Cotton">Cotton</option>
+            <option value="Sugarcane">Sugarcane</option>
 
-<div class="col-md-6">
+            <option value="Potato">Potato</option>
+            <option value="Onion">Onion</option>
+            <option value="Tomato">Tomato</option>
+            <option value="Brinjal">Brinjal</option>
+            <option value="Cabbage">Cabbage</option>
+            <option value="Cauliflower">Cauliflower</option>
+            <option value="Peas">Peas</option>
 
-<div class="price-card">
+            <option value="Chilli">Chilli</option>
+            <option value="Groundnut">Groundnut</option>
+            <option value="Mustard">Mustard</option>
+            <option value="Soybean">Soybean</option>
+          </select>
 
-<form method="POST">
+          <label class="form-label mt-3">State</label>
+          <input
+            type="text"
+            name="state"
+            class="form-control"
+            placeholder="Enter State"
+            required
+          />
 
-<label class="form-label">Select Crop</label>
-<select name="crop" class="form-control" required>
+          <label class="form-label mt-3">Month</label>
+          <select name="month" class="form-control" required>
+            <option value="jan">January</option>
+            <option value="feb">February</option>
+            <option value="mar">March</option>
+            <option value="apr">April</option>
+            <option value="may">May</option>
+            <option value="jun">June</option>
+            <option value="jul">July</option>
+            <option value="aug">August</option>
+            <option value="sep">September</option>
+            <option value="oct">October</option>
+            <option value="nov">November</option>
+            <option value="dec">December</option>
+          </select>
 
-<option value="">Select Crop</option>
-<option value="rice">Rice</option>
-<option value="wheat">Wheat</option>
-<option value="maize">Maize</option>
-<option value="cotton">Cotton</option>
-<option value="sugarcane">Sugarcane</option>
-<option value="banana">Banana</option>
-<option value="mango">Mango</option>
+          <button class="btn btn-success w-100 mt-4">Predict Price</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-</select>
+  {% if prediction %}
 
-<label class="form-label mt-3">State</label>
-<input type="text" name="state" class="form-control" placeholder="Enter State" required>
+  <div class="card text-center result">
+    <h3>🌾 Crop Price Prediction</h3>
 
-<label class="form-label mt-3">Month</label>
-<select name="month" class="form-control" required>
+    <p><b>Current Avg Price:</b> ₹ {{ prediction.base_price }} / Quintal</p>
 
-<option value="jan">January</option>
-<option value="feb">February</option>
-<option value="mar">March</option>
-<option value="apr">April</option>
-<option value="may">May</option>
-<option value="jun">June</option>
-<option value="jul">July</option>
-<option value="aug">August</option>
-<option value="sep">September</option>
-<option value="oct">October</option>
-<option value="nov">November</option>
-<option value="dec">December</option>
+    <p><b>Predicted Price:</b> ₹ {{ prediction.predicted_price }} / Quintal</p>
 
-</select>
+    <p><b>Trend:</b> {{ prediction.trend }}</p>
 
-<button class="btn btn-success w-100 mt-4">
-Predict Price
-</button>
+    <p>{{ prediction.advice }}</p>
+  </div>
 
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-
-{% if prediction %}
-
-<div class="row mt-5">
-
-<div class="col-md-8 mx-auto">
-
-<div class="price-card">
-
-<h4>Crop: {{ crop }}</h4>
-
-<p><b>Predicted Market Price:</b> ₹ {{ prediction.price }} / quintal</p>
-
-<p><b>Market Trend:</b> {{ prediction.trend }}</p>
-
-<p><b>Advice:</b> {{ prediction.advice }}</p>
-
-</div>
-
-</div>
-
-</div>
-
-{% endif %}
-
+  {% endif %}
 </div>
 
 {% endblock %}

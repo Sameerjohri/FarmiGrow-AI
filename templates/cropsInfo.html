@@ -1,96 +1,77 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
-
-.info-card{
-background:linear-gradient(90deg,rgb(172, 206, 218),rgb(249, 255, 246));
-border-radius:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.12);
-padding:25px;
-margin-top:20px;
-}
-
-.newww{
-    background:linear-gradient(90deg,rgb(172, 206, 218),rgb(249, 255, 246));
-}
-
-.biggg{
-    background: rgba(7, 27, 12, 0.2);
-    backdrop-filter: blur(10px);
+  .info-card {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
     border-radius: 15px;
-    border: 1px solid rgba(25, 95, 15, 0.3);
-    margin:0px 350px 20px 350px;
-    padding:7px 0px 0px 0px;
-}
+    box-shadow: 0 4px 10px rgba(25, 37, 20, 0.99);
+    padding: 25px;
+    margin-top: 20px;
+  }
 
+  .newww {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
+    border: none;
+  }
 
+  .biggg {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0px 250px 20px 250px;
+    padding: 20px px 20px 0px;
+  }
 </style>
 
-<div class="container ">
-<div class="biggg">
-<h2 class="text-center mb-4">
-🌾 Crop Information
-</h2>
-</div>
-<div class="row justify-content-center">
+<div class="container">
+  <div class="biggg">
+    <h2 class="text-center mb-4">🌾 Crop Information</h2>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-4 shadow newww">
+        <form action="/cropsInfo" method="POST">
+          <label class="form-label">Enter Crop Name</label>
 
-<div class="col-md-6">
+          <input
+            type="text"
+            name="crop"
+            class="form-control"
+            placeholder="e.g. rice, maize, banana"
+            required
+          />
 
-<div class="card p-4 shadow newww">
+          <button class="btn btn-success mt-3 w-100">Search Crop</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<form action="/cropsInfo" method="POST">
+  {% if crop_data %}
 
-<label class="form-label">Enter Crop Name</label>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="info-card">
+        <h3 class="text-center mb-3">{{ crop_name.upper() }}</h3>
 
-<input type="text" name="crop" class="form-control" placeholder="e.g. rice, maize, banana" required>
+        <p><b>Climate:</b> {{ crop_data.climate }}</p>
 
-<button class="btn btn-success mt-3 w-100">
-Search Crop
-</button>
+        <p><b>Soil Type:</b> {{ crop_data.soil }}</p>
 
-</form>
+        <p><b>Growing Season:</b> {{ crop_data.season }}</p>
 
-</div>
+        <p><b>Water Requirement:</b> {{ crop_data.water }}</p>
 
-</div>
+        <p><b>Fertilizer:</b> {{ crop_data.fertilizer }}</p>
 
-</div>
+        <pre style="white-space: pre-wrap">{{ crop_data.description }}</pre>
+      </div>
+    </div>
+  </div>
 
-
-{% if crop_data %}
-
-<div class="row justify-content-center">
-
-<div class="col-md-8">
-
-<div class="info-card">
-
-<h3 class="text-center mb-3">
-{{ crop_name.upper() }}
-</h3>
-
-<p><b>Climate:</b> {{ crop_data.climate }}</p>
-
-<p><b>Soil Type:</b> {{ crop_data.soil }}</p>
-
-<p><b>Growing Season:</b> {{ crop_data.season }}</p>
-
-<p><b>Water Requirement:</b> {{ crop_data.water }}</p>
-
-<p><b>Fertilizer:</b> {{ crop_data.fertilizer }}</p>
-
-<p><b>Description:</b> {{ crop_data.description }}</p>
-
-</div>
-
-</div>
-
-</div>
-
-{% endif %}
-
+  {% endif %}
 </div>
 
 {% endblock %}

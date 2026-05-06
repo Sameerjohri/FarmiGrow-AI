@@ -1,86 +1,100 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
+    <title>Login</title>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-<title>Login</title>
+    <style>
+      .overlay {
+        background-color: rgba(0, 0, 0, 0.55); /* same as firstAppearance */
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      body {
+        background-image: url("{{ url_for('static', filename='images/Background.png') }}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+      }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+      /* login card */
 
-<style>
+      .login-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        padding: 25px;
+      }
 
-body{
-background-image: url("{{ url_for('static', filename='images/Background.png') }}");
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
-height:100vh;
-margin:0;
+      .coll{
+        background-color:rgb(244, 209, 6);
+      }
+      .coll:hover{
+        background-color:rgb(214, 156, 10);
+      }
 
-display:flex;
-justify-content:center;
-align-items:center;
-}
 
-/* login card */
+    </style>
+  </head>
 
-.login-card{
-background:linear-gradient(90deg,rgb(168, 173, 169),rgb(249, 255, 246));
-backdrop-filter: blur(5px);
-border-radius:12px;
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
-padding:25px;
-}
+  <body>
+    <div class="overlay">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-5">
+            <div class="login-card">
+              <h3 class="text-center mb-4">Login</h3>
 
-</style>
+              <form action="/login" method="POST">
+                <div class="mb-3">
+                  <label class="form-label">Username</label>
+                  <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter username"
+                    required
+                  />
+                </div>
 
-</head>
+                <div class="mb-3">
+                  <label class="form-label">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter password"
+                    required
+                    minlength="6"
+                  />
+                </div>
 
-<body>
+                <button type="submit" class="btn coll w-100">
+                  Login
+                </button>
 
-<div class="container">
-
-<div class="row justify-content-center">
-
-<div class="col-md-4">
-
-<div class="login-card">
-
-<h3 class="text-center mb-4">Login</h3>
-
-<form action="/login" method="POST">
-
-<div class="mb-3">
-<label class="form-label">Username</label>
-<input type="text" name="username" class="form-control" placeholder="Enter username" required>
-</div>
-
-<div class="mb-3">
-<label class="form-label">Password</label>
-<input type="password" name="password" class="form-control" placeholder="Enter password" required minlength="6">
-</div>
-
-<button type="submit" class="btn btn-primary w-100">
-Login
-</button>
-
-<p class="text-center mt-3">
-Don't have an account?
-<a href="/signup">Signup</a>
-</p>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</body>
+                <p class="text-center mt-3">
+                  Don't have an account?
+                  <a href="{{ url_for('signup') }}"" style="color: rgb(206, 216, 65);">Signup</a>
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

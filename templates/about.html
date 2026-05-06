@@ -1,144 +1,112 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
+  .about-header {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+  }
 
-.about-header{
-background:linear-gradient(90deg,rgb(1, 52, 10),rgb(64, 120, 85));
-color:white;
-padding:40px;
-border-radius:15px;
-text-align:center;
-margin-bottom:30px;
-}
-
-.about-card{
-background:linear-gradient(90deg,#ADD8E6,#FFFFFF);
-border-radius:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.12);
-padding:25px;
-margin-bottom:20px;
-}
-
+  .about-card {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    padding: 25px;
+    margin-bottom: 20px;
+  }
 </style>
 
-
 <div class="container">
+  <div class="about-header">
+    <h1>🌱 Smart Agriculture Advisor</h1>
 
-<div class="about-header">
+    <p>AI-Powered Decision Support System for Modern Farming</p>
+  </div>
 
-<h1>🌱 Smart Agriculture Advisor</h1>
+  <div class="about-card">
+    <h3>📌 Project Overview</h3>
 
-<p>
-AI-Powered Decision Support System for Modern Farming
-</p>
+    <p>
+      The Smart Agriculture Advisor is an AI-powered web platform designed to
+      assist farmers in making informed agricultural decisions. The system
+      analyzes soil nutrients, weather conditions, and environmental parameters
+      to recommend the most suitable crop for cultivation.
+    </p>
 
-</div>
+    <p>
+      The goal of this system is to improve crop productivity, reduce resource
+      wastage, and help farmers make data-driven farming decisions.
+    </p>
+  </div>
 
+  <div class="about-card">
+    <h3>🌾 Problem Statement</h3>
 
-<div class="about-card">
+    <p>
+      Farmers often rely on traditional knowledge or scattered sources of
+      information when deciding which crop to grow. This process can lead to
+      inefficient resource use, poor crop selection, and lower agricultural
+      productivity.
+    </p>
 
-<h3>📌 Project Overview</h3>
+    <p>
+      The Smart Agriculture Advisor solves this problem by providing instant
+      recommendations based on scientific data and machine learning models.
+    </p>
+  </div>
 
-<p>
-The Smart Agriculture Advisor is an AI-powered web platform designed to assist farmers
-in making informed agricultural decisions. The system analyzes soil nutrients,
-weather conditions, and environmental parameters to recommend the most suitable
-crop for cultivation.
-</p>
+  <div class="about-card">
+    <h3>🚀 Key Features</h3>
 
-<p>
-The goal of this system is to improve crop productivity, reduce resource wastage,
-and help farmers make data-driven farming decisions.
-</p>
+    <ul>
+      <li>🌱 AI-Based Crop Recommendation</li>
 
-</div>
+      <li>📊 Soil and Weather Analysis</li>
 
+      <li>📚 Crop Information Knowledge Base</li>
 
+      <li>🔐 Secure User Login & Signup System</li>
 
-<div class="about-card">
+      <li>🌍 Future scope for State-wise crop advisory</li>
+    </ul>
+  </div>
 
-<h3>🌾 Problem Statement</h3>
+  <div class="about-card">
+    <h3>🛠 Technologies Used</h3>
 
-<p>
-Farmers often rely on traditional knowledge or scattered sources of information
-when deciding which crop to grow. This process can lead to inefficient resource
-use, poor crop selection, and lower agricultural productivity.
-</p>
+    <ul>
+      <li>Python</li>
 
-<p>
-The Smart Agriculture Advisor solves this problem by providing instant
-recommendations based on scientific data and machine learning models.
-</p>
+      <li>Flask Web Framework</li>
 
-</div>
+      <li>Machine Learning (Scikit-Learn)</li>
 
+      <li>Bootstrap for UI Design</li>
 
+      <li>SQLite Database</li>
 
-<div class="about-card">
+      <li>HTML, CSS, JavaScript</li>
+    </ul>
+  </div>
 
-<h3>🚀 Key Features</h3>
+  <div class="about-card">
+    <h3>🎯 Project Objective</h3>
 
-<ul>
+    <p>
+      The objective of this project is to build an intelligent web-based system
+      that helps farmers identify the best crop to cultivate based on soil
+      composition and climatic conditions.
+    </p>
 
-<li>🌱 AI-Based Crop Recommendation</li>
-
-<li>📊 Soil and Weather Analysis</li>
-
-<li>📚 Crop Information Knowledge Base</li>
-
-<li>🔐 Secure User Login & Signup System</li>
-
-<li>🌍 Future scope for State-wise crop advisory</li>
-
-</ul>
-
-</div>
-
-
-
-<div class="about-card">
-
-<h3>🛠 Technologies Used</h3>
-
-<ul>
-
-<li>Python</li>
-
-<li>Flask Web Framework</li>
-
-<li>Machine Learning (Scikit-Learn)</li>
-
-<li>Bootstrap for UI Design</li>
-
-<li>SQLite Database</li>
-
-<li>HTML, CSS, JavaScript</li>
-
-</ul>
-
-</div>
-
-
-
-<div class="about-card">
-
-<h3>🎯 Project Objective</h3>
-
-<p>
-The objective of this project is to build an intelligent web-based system
-that helps farmers identify the best crop to cultivate based on soil
-composition and climatic conditions.
-</p>
-
-<p>
-By integrating machine learning with an easy-to-use web interface,
-the platform aims to promote smart farming practices and sustainable agriculture.
-</p>
-
-</div>
-
+    <p>
+      By integrating machine learning with an easy-to-use web interface, the
+      platform aims to promote smart farming practices and sustainable
+      agriculture.
+    </p>
+  </div>
 </div>
 
 {% endblock %}

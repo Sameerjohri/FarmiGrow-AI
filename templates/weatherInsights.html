@@ -1,86 +1,69 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
 
-.weather-container{
-margin-top:40px;
-}
 
-.biggg{
-    background: rgba(7, 27, 12, 0.2);
-    backdrop-filter: blur(10px);
+  .biggg {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
     border-radius: 15px;
-    border: 1px solid rgba(25, 95, 15, 0.3);
-    margin:0px 350px 20px 350px;
-    padding:7px 0px 0px 0px;
-}
+    text-align: center;
+    margin: 0px 250px 20px 250px;
+    padding: 20px px 20px 0px;
+  }
 
-
-.weather-card{
-background:linear-gradient(90deg,rgb(172, 206, 218),rgb(249, 255, 246));
-border-radius:15px;
-box-shadow:0 4px 12px rgba(0,0,0,0.2);
-padding:30px;
-}
-
+  .weather-card {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+  }
 </style>
 
-<div class="container weather-container">
-<div class="biggg">
-<h2 class="text-center mb-4">🌤 Weather Insights</h2>
-</div>
-<div class="row justify-content-center">
+<div class="container ">
+  <div class="biggg">
+    <h2 class="text-center mb-4">🌤 Weather Insights</h2>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="weather-card">
+        <form method="POST">
+          <label class="form-label">Enter City</label>
 
-<div class="col-md-6">
+          <input
+            type="text"
+            name="city"
+            class="form-control"
+            placeholder="Enter city name"
+            required
+          />
 
-<div class="weather-card">
+          <button class="btn btn-success mt-3 w-100">Get Weather</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<form method="POST">
+  {% if weather %}
 
-<label class="form-label">Enter City</label>
+  <div class="row mt-5">
+    <div class="col-md-8 mx-auto">
+      <div class="weather-card">
+        <h4>City: {{ city }}</h4>
 
-<input type="text" name="city" class="form-control" placeholder="Enter city name" required>
+        <p><b>Temperature:</b> {{ weather.temperature }}</p>
 
-<button class="btn btn-success mt-3 w-100">
-Get Weather
-</button>
+        <p><b>Humidity:</b> {{ weather.humidity }}</p>
 
-</form>
+        <p><b>Rainfall:</b> {{ weather.rainfall }}</p>
 
-</div>
+        <p><b>Advice:</b> {{ weather.advice }}</p>
+      </div>
+    </div>
+  </div>
 
-</div>
-
-</div>
-
-{% if weather %}
-
-<div class="row mt-5">
-
-<div class="col-md-8 mx-auto">
-
-<div class="weather-card">
-
-<h4>City: {{ city }}</h4>
-
-<p><b>Temperature:</b> {{ weather.temperature }}</p>
-
-<p><b>Humidity:</b> {{ weather.humidity }}</p>
-
-<p><b>Rainfall:</b> {{ weather.rainfall }}</p>
-
-<p><b>Advice:</b> {{ weather.advice }}</p>
-
-</div>
-
-</div>
-
-</div>
-
-{% endif %}
-
+  {% endif %}
 </div>
 
 {% endblock %}

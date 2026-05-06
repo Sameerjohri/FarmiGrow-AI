@@ -1,22 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from src.prediction import predict_crop
+from utils.predict import predict_crop_util, predict_price_util
 from database.models import db, User
 from data.crops_data import crops_database
 from data.state_data import state_data
-from data.price_data import base_prices
+from dotenv import load_dotenv
+load_dotenv()
 import joblib
 import requests
+import random
 import os
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# -----------------------------
-# Flask Config
-# -----------------------------
 
-app.config['SECRET_KEY'] = "secret123"
+
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "fallback_secret")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users.db"
 
@@ -27,27 +27,18 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# -----------------------------
-# Load ML Model
-# -----------------------------
-
-model = joblib.load("model/crop_model.pkl")
-
-# -----------------------------
-# First Appearance
-# -----------------------------
-
 @app.route("/")
 def firstAppearance():
+    
     return render_template("firstAppearance.html")
 
-# -----------------------------
-# Authentication Routes
-# -----------------------------
+
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
 
+
+    
     if request.method == 'POST':
 
         username = request.form['username']
@@ -74,6 +65,8 @@ def signup():
 @app.route('/login', methods=['GET','POST'])
 def login():
 
+
+    
     if request.method == 'POST':
 
         username = request.form['username']
@@ -94,25 +87,31 @@ def login():
 @app.route('/logout')
 def logout():
 
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     session.pop('user', None)
 
     return render_template("logout.html")
 
-# -----------------------------
-# Protected Pages
-# -----------------------------
+
 
 @app.route('/home')
 def home():
 
     if 'user' not in session:
         return redirect(url_for('login'))
+    
+
 
     return render_template("home.html")
 
 
 @app.route('/about')
 def about():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     return render_template("about.html")
 
 
@@ -120,32 +119,43 @@ def about():
 @app.route('/stateAdvisory', methods=['GET','POST'])
 def stateAdvisory():
 
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     advisory = None
     state_name = None
-
-    
+    error = None
 
     if request.method == "POST":
 
-        state = request.form['state']
+        # Convert input to match dictionary format
+        state = request.form['state'].lower().replace(" ", "_")
 
         advisory = state_data.get(state)
 
-        state_name = state.replace("_"," ").title()
+        if advisory:
+            state_name = state.replace("_", " ").title()
+        else:
+            error = "State data not found. Please select a valid state."
 
     return render_template(
-        "stateAdvisory.html",
-        advisory=advisory,
-        state_name=state_name
-    )
+    "stateAdvisory.html",
+    advisory=advisory,
+    state_name=state_name,
+    error=error,
+    states=state_data.keys()
+)
 
 @app.route('/weatherInsights', methods=['GET','POST'])
 def weatherInsights():
 
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     weather = None
     city = None
 
-    API_KEY = "661fc6460b81e2cde81cac36347022eb"
+    API_KEY = os.environ.get("WEATHER_API_KEY")
 
     if request.method == "POST":
 
@@ -153,7 +163,7 @@ def weatherInsights():
 
         url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
 
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
         data = response.json()
 
         if data["cod"] == 200:
@@ -191,57 +201,79 @@ def weatherInsights():
         city=city
     )
 
-@app.route('/cropPrice', methods=['GET','POST'])
-def cropPrice():
+@app.route('/marketInsights', methods=['GET','POST'])
+def marketInsights():
 
-    prediction = None
-    crop = None
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
+    data = None
+    default_data = []
+    error = None
+
+    API_KEY = os.environ.get("MARKET_API_KEY")
+
+
+    if request.method == "GET":
+
+        default_crops = ["Wheat", "Rice", "Maize"]
+
+        for crop in default_crops:
+            try:
+                url = f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key={API_KEY}&format=json&filters[commodity]={crop}&limit=6"
+
+                response = requests.get(url, timeout=5)
+                result = response.json()
+
+                records = result.get("records")
+
+                if records:
+                    default_data.append(records[0])
+
+            except:
+                continue
+
 
     if request.method == "POST":
 
-        crop = request.form['crop']
-        state = request.form['state']
-        month = request.form['month']
+        crop = request.form['crop'].title()
+        state = request.form['state'].title()
 
-        
+        try:
+            url = f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key={API_KEY}&format=json&filters[commodity]={crop}&limit=6"
 
-        base_price = base_prices.get(crop,2000)
+            
+            response = requests.get(url, timeout=5)
 
-        # Seasonal effect
-        seasonal_increase = ["apr","may","jun","jul"]
+            result = response.json()
 
-        if month in seasonal_increase:
-            price = base_price + 200
-            trend = "Increasing"
-        else:
-            price = base_price - 100
-            trend = "Stable"
+            records = result.get("records")
 
-        prediction = {
-            "price":price,
-            "trend":trend,
-            "advice":f"Market prices for {crop} in {state} during {month} may fluctuate depending on supply and demand."
-        }
+            if records:
+                data = records
+            else:
+                error = "No data found"
+
+        except Exception as e:
+            print("ERROR:", e)
+            error = "API failed"
 
     return render_template(
-        "cropPrice.html",
-        prediction=prediction,
-        crop=crop
+        "marketInsights.html",
+        data=data,
+        default_data=default_data,
+        error=error
     )
-
-
-@app.route('/marketInsights')
-def marketInsights():
-    return render_template("marketInsights.html")
-
-
-
-# -----------------------------
+    
+    
 
 
 @app.route('/cropRecommendation', methods=['GET','POST'])
 def cropRecommendation():
 
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     if request.method == "POST":
 
         N = float(request.form['N'])
@@ -252,7 +284,7 @@ def cropRecommendation():
         ph = float(request.form['ph'])
         rainfall = float(request.form['rainfall'])
 
-        crop = predict_crop(N, P, K, temperature, humidity, ph, rainfall)
+        crop = predict_crop_util(N, P, K, temperature, humidity, ph, rainfall)
 
         return render_template(
             "result.html",
@@ -272,6 +304,9 @@ def cropRecommendation():
 @app.route('/cropsInfo', methods=['GET','POST'])
 def cropsInfo():
 
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     crop_data = None
     crop_name = None
 
@@ -279,16 +314,83 @@ def cropsInfo():
 
     if request.method == "POST":
 
-        crop_name = request.form['crop'].lower()
-
+        crop_name = request.form['crop'].strip().lower()
+        
         crop_data = crops_database.get(crop_name)
 
     return render_template("cropsInfo.html", crop_data=crop_data, crop_name=crop_name)
 
-# -----------------------------
-# Run App
-# -----------------------------
+
+
+
+@app.route('/cropPrice', methods=['GET','POST'])
+def cropPrice():
+
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
+    prediction = None
+    error = None
+
+    API_KEY = os.environ.get("CROP_PRICE_API_KEY")
+
+    if request.method == "POST":
+
+        crop = request.form['crop'].title()
+        month = request.form['month'].lower()
+
+        try:
+            # -------- STEP 1: GET BASE PRICE FROM API --------
+            url = f"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key={API_KEY}&format=json&filters[commodity]={crop}&limit=5"
+
+            response = requests.get(url, timeout=5)
+            result = response.json()
+
+            records = result.get("records")
+
+            if not records:
+                error = "No data found for this crop"
+            else:
+                # Take average of prices
+                prices = [int(r["modal_price"]) for r in records if r.get("modal_price")]
+                base_price = sum(prices) // len(prices)
+
+            predicted_price, trend = predict_price_util(base_price, month)
+
+            prediction = {
+                    "base_price": base_price,
+                    "predicted_price": predicted_price,
+                    "trend": trend,
+                    "advice": f"Based on current trends, {crop} prices may {trend.lower()} in coming weeks."
+                }
+
+        except Exception as e:
+            print("ERROR:", e)
+            error = "Prediction failed"
+
+    return render_template(
+        "cropPrice.html",
+        prediction=prediction,
+        error=error
+    )
+
+
+
+@app.context_processor
+def inject_user():
+    
+
+    
+    return dict(user=session.get('user'))
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port , debug=True)

@@ -1,148 +1,129 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
-
-.market-header{
-    background: rgba(4, 84, 23, 0.2);
-    backdrop-filter: blur(10px);
+  .market-header {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
     border-radius: 15px;
-    border: 1px solid rgba(25, 190, 0, 0.3);
-color:white;
-padding:35px;
-text-align:center;
-margin-bottom:30px;
-}
+    text-align: center;
+    margin: 0px 250px 20px 250px;
+    padding: 20px px 20px 0px;
+  }
 
-.market-card{
-background:linear-gradient(90deg,#ADD8E6,#FFFFFF);
-border-radius:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.12);
-padding:20px;
-text-align:center;
-margin-bottom:20px;
-}
+  .market-card {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-.price{
-font-size:26px;
-font-weight:bold;
-color:#1e7f3f;
-}
+  .price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #1e7f3f;
+  }
 
+  .empty-state {
+    text-align: center;
+    margin-top: 40px;
+    color: #666;
+  }
+
+  .brit{
+    color:rgb(255, 230, 0);
+  }
 </style>
 
 <div class="container">
+  <!-- HEADER -->
+  <div class="market-header">
+    <h2>📊 Agricultural Market Insights</h2>
+    <p>Get real-time mandi prices of crops across India.</p>
+  </div>
 
-<div class="market-header">
+  <!-- SEARCH FORM -->
+  <form method="POST" class="mb-4">
+    <div class="row">
+      <div class="col-md-5">
+        <input
+          type="text"
+          name="crop"
+          class="form-control"
+          placeholder="Enter Crop (e.g. Wheat)"
+          required
+        />
+      </div>
 
-<h2>📊 Agricultural Market Insights</h2>
+      <div class="col-md-5">
+        <input
+          type="text"
+          name="state"
+          class="form-control"
+          placeholder="Enter State (e.g. Uttar Pradesh)"
+          required
+        />
+      </div>
 
-<p>
-View current market trends and estimated crop prices to make better farming decisions.
-</p>
+      <div class="col-md-2">
+        <button class="btn btn-success w-100">Search</button>
+      </div>
+    </div>
+  </form>
 
-</div>
+  <!-- ERROR -->
+  {% if error %}
+  <div class="alert alert-danger text-center">{{ error }}</div>
+  {% endif %}
 
+  <!-- DEFAULT LIVE CARDS -->
+  {% if default_data %}
 
-<div class="row">
+  <h4 class="text-center mb-4 brit">🌟 Popular Crops (Live Prices)</h4>
 
-<div class="col-md-4">
+  <div class="row">
+    {% for item in default_data %}
 
-<div class="market-card">
+    <div class="col-md-4">
+      <div class="market-card">
+        <h4>🌾 {{ item.commodity }}</h4>
 
-<h4>🌾 Rice</h4>
+        <p class="price">₹ {{ item.modal_price }} / Quintal</p>
 
-<p class="price">₹2200 / Quintal</p>
+        <p>{{ item.market }}, {{ item.district }}</p>
+      </div>
+    </div>
 
-<p>High demand in northern markets</p>
+    {% endfor %}
+  </div>
 
-</div>
+  {% endif %}
 
-</div>
+  <!-- LIVE API DATA -->
+  {% if data %}
 
+  <h4 class="text-center mb-4">📍 Live Mandi Prices</h4>
 
-<div class="col-md-4">
+  <div class="row">
+    {% for item in data %}
 
-<div class="market-card">
+    <div class="col-md-4">
+      <div class="market-card">
+        <h4>🌾 {{ item.commodity }}</h4>
 
-<h4>🌽 Maize</h4>
+        <p class="price">₹ {{ item.modal_price }} / Quintal</p>
 
-<p class="price">₹1850 / Quintal</p>
+        <p><b>Market:</b> {{ item.market }}</p>
+        <p><b>District:</b> {{ item.district }}</p>
+      </div>
+    </div>
 
-<p>Stable demand across India</p>
+    {% endfor %}
+  </div>
 
-</div>
-
-</div>
-
-
-<div class="col-md-4">
-
-<div class="market-card">
-
-<h4>🍌 Banana</h4>
-
-<p class="price">₹1200 / Quintal</p>
-
-<p>Strong export demand</p>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<div class="row">
-
-<div class="col-md-4">
-
-<div class="market-card">
-
-<h4>🍎 Apple</h4>
-
-<p class="price">₹4500 / Quintal</p>
-
-<p>Premium market crop</p>
-
-</div>
-
-</div>
-
-
-<div class="col-md-4">
-
-<div class="market-card">
-
-<h4>🌾 Wheat</h4>
-
-<p class="price">₹2100 / Quintal</p>
-
-<p>Government MSP supported</p>
-
-</div>
-
-</div>
-
-
-<div class="col-md-4">
-
-<div class="market-card">
-
-<h4>🥔 Potato</h4>
-
-<p class="price">₹900 / Quintal</p>
-
-<p>Price fluctuates seasonally</p>
-
-</div>
-
-</div>
-
-</div>
-
+  {% endif %}
 </div>
 
 {% endblock %}

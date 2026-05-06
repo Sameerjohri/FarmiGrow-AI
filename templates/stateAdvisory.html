@@ -1,103 +1,77 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
 
-.state-container{
-margin-top:40px;
-}
 
-.card{
-background:linear-gradient(90deg,rgb(172, 206, 218),rgb(249, 255, 246));
-border-radius:15px;
-box-shadow:0 4px 12px rgba(0,0,0,0.2);
-}
-
-.biggg{
-    background: rgba(7, 27, 12, 0.2);
-    backdrop-filter: blur(10px);
+  .card {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
     border-radius: 15px;
-    border: 1px solid rgba(25, 95, 15, 0.3);
-    margin:0px 250px 20px 250px;
-    padding:7px 0px 0px 0px;
-}
+    border: none;
+  }
 
+  .biggg {
+    background: linear-gradient(90deg, rgb(1, 52, 10), rgb(64, 120, 85));
+    color: rgb(206, 255, 180);
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0px 250px 20px 250px;
+    padding: 20px px 20px 0px;
+  }
 </style>
 
+<div class="container ">
+  <div class="biggg">
+    <h2 class="text-center mb-4">🌾 State Based Farming Advisory</h2>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-4">
+        {% if error %}
+        <div class="alert alert-danger text-center">{{ error }}</div>
+        {% endif %}
 
-<div class="container state-container">
-<div class="biggg">
-<h2 class="text-center mb-4">🌾 State Based Farming Advisory</h2>
-</div>
-<div class="row justify-content-center">
+        <form method="POST">
+          <label class="form-label">Select State</label>
 
-<div class="col-md-6">
+          <select name="state" class="form-control" required>
+            <option value="">Choose State</option>
 
-<div class="card p-4">
+            {% for state in states %}
+            <option value="{{ state }}">
+              {{ state.replace("_"," ").title() }}
+            </option>
+            {% endfor %}
+          </select>
 
-<form method="POST">
+          <button class="btn btn-success w-100 mt-3">Get Advisory</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<label class="form-label">Select State</label>
+  {% if advisory %}
 
-<select name="state" class="form-control" required>
+  <div class="row mt-5">
+    <div class="col-md-8 mx-auto">
+      <div class="card p-4">
+        <h4>State: {{ state_name }}</h4>
 
-<option value="">Choose State</option>
+        <p><b>Climate:</b> {{ advisory.climate }}</p>
 
-<option value="uttar_pradesh">Uttar Pradesh</option>
-<option value="punjab">Punjab</option>
-<option value="haryana">Haryana</option>
-<option value="maharashtra">Maharashtra</option>
-<option value="rajasthan">Rajasthan</option>
-<option value="madhya_pradesh">Madhya Pradesh</option>
-<option value="bihar">Bihar</option>
-<option value="west_bengal">West Bengal</option>
-<option value="tamil_nadu">Tamil Nadu</option>
-<option value="karnataka">Karnataka</option>
+        <p><b>Major Crops:</b> {{ advisory.crops }}</p>
 
-</select>
+        <p><b>Soil Type:</b> {{ advisory.soil }}</p>
 
-<button class="btn btn-success w-100 mt-3">
-Get Advisory
-</button>
+        <p><b>Rainfall:</b> {{ advisory.rainfall }}</p>
 
-</form>
+        <p><b>Farming Advice:</b></p>
+        <pre style="white-space: pre-wrap">{{ advisory.advice }}</pre>
+      </div>
+    </div>
+  </div>
 
-</div>
-
-</div>
-
-</div>
-
-
-{% if advisory %}
-
-<div class="row mt-5">
-
-<div class="col-md-8 mx-auto">
-
-<div class="card p-4">
-
-<h4>State: {{ state_name }}</h4>
-
-<p><b>Climate:</b> {{ advisory.climate }}</p>
-
-<p><b>Major Crops:</b> {{ advisory.crops }}</p>
-
-<p><b>Soil Type:</b> {{ advisory.soil }}</p>
-
-<p><b>Rainfall:</b> {{ advisory.rainfall }}</p>
-
-<p><b>Farming Advice:</b> {{ advisory.advice }}</p>
-
-</div>
-
-</div>
-
-</div>
-
-{% endif %}
-
+  {% endif %}
 </div>
 
 {% endblock %}

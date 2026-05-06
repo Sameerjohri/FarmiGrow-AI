@@ -1,139 +1,122 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <style>
+  .card-box {
+    background: linear-gradient(90deg, rgb(64, 120, 85), rgb(255, 255, 255));
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    min-height: 200px;
+  }
 
-.card-box{
-background:linear-gradient(90deg,#ADD8E6,#FFFFFF);
-border-radius:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.12);
-padding:20px;
-text-align:center;
-margin-bottom:20px;
-min-height:200px;
-}
+  .big-text {
+    font-size: 32px;
+    font-weight: bold;
+  }
 
-.big-text{
-font-size:32px;
-font-weight:bold;
-}
-
-.success-box{
-background:rgba(0,255,0,0.9);
-padding:12px;
-border-radius:10px;
-text-align:center;
-font-weight:600;
-margin-bottom:20px;
-}
-
+  .success-box {
+    background: rgba(0, 255, 0, 0.9);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
 </style>
 
-
 <div class="containerboxx">
+  <div class="success-box">✅ Prediction generated successfully!</div>
 
-<div class="success-box">
-✅ Prediction generated successfully!
-</div>
+  <div class="row">
+    <!-- Recommended Crop -->
+    <div class="col-md-6">
+      <div class="card-box">
+        <h3>🌾 Recommended Crop</h3>
 
-<div class="row">
+        <p class="big-text">{{ crop.upper() }}</p>
+      </div>
+    </div>
 
-<!-- Recommended Crop -->
-<div class="col-md-6">
-<div class="card-box">
+    <!-- Soil Condition -->
+    <div class="col-md-6">
+      <div class="card-box">
+        <h3>🌱 Soil Condition</h3>
 
-<h3>🌾 Recommended Crop</h3>
+        <p>pH Level: {{ ph }}</p>
 
-<p class="big-text">
-{{ crop.upper() }}
-</p>
+        {% if N < 50 %}
+        <p>Soil Status: Low Nitrogen</p>
 
-</div>
-</div>
+        {% elif P < 40 %}
+        <p>Soil Status: Low Phosphorus</p>
 
+        {% elif K < 40 %}
+        <p>Soil Status: Low Potassium</p>
 
-<!-- Soil Condition -->
-<div class="col-md-6">
-<div class="card-box">
+        {% else %}
+        <p>Soil Status: Balanced</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
-<h3>🌱 Soil Condition</h3>
+  <div class="row">
+    <!-- Weather -->
+    <div class="col-md-6">
+      <div class="card-box">
+        <h3>☀ Weather Details</h3>
 
-<p>pH Level: {{ ph }}</p>
+        <p>Temperature: {{ temperature }} °C</p>
 
-{% if N < 50 %}
-<p>Soil Status: Low Nitrogen</p>
+        <p>Humidity: {{ humidity }} %</p>
 
-{% elif P < 40 %}
-<p>Soil Status: Low Phosphorus</p>
+        <p>Rainfall: {{ rainfall }} mm</p>
+      </div>
+    </div>
 
-{% elif K < 40 %}
-<p>Soil Status: Low Potassium</p>
+    <!-- Farming Tips -->
+    <div class="col-md-6">
+      <div class="card-box">
+        <h3>📋 Farming Tips</h3>
 
-{% else %}
-<p>Soil Status: Balanced</p>
-{% endif %}
+        {% if crop == "apple" %}
+        <p>
+          Requires cool climate and well-drained loamy soil. Prune regularly and
+          ensure proper irrigation.
+        </p>
 
-</div>
-</div>
+        {% elif crop == "banana" %}
+        <p>
+          Prefers warm and humid climate. Apply potassium-rich fertilizer and
+          maintain proper drainage.
+        </p>
 
-</div>
+        {% elif crop == "rice" %}
+        <p>
+          Requires high rainfall and standing water during early growth stage.
+        </p>
 
+        {% elif crop == "maize" %}
+        <p>
+          Needs moderate rainfall and well-drained soil. Apply nitrogen-rich
+          fertilizer.
+        </p>
 
-<div class="row">
+        {% else %}
+        <p>Follow recommended agricultural practices for this crop.</p>
 
-<!-- Weather -->
-<div class="col-md-6">
-<div class="card-box">
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
-<h3>☀ Weather Details</h3>
-
-<p>Temperature: {{ temperature }} °C</p>
-
-<p>Humidity: {{ humidity }} %</p>
-
-<p>Rainfall: {{ rainfall }} mm</p>
-
-</div>
-</div>
-
-
-<!-- Farming Tips -->
-<div class="col-md-6">
-<div class="card-box">
-
-<h3>📋 Farming Tips</h3>
-
-{% if crop == "apple" %}
-<p>Requires cool climate and well-drained loamy soil. Prune regularly and ensure proper irrigation.</p>
-
-{% elif crop == "banana" %}
-<p>Prefers warm and humid climate. Apply potassium-rich fertilizer and maintain proper drainage.</p>
-
-{% elif crop == "rice" %}
-<p>Requires high rainfall and standing water during early growth stage.</p>
-
-{% elif crop == "maize" %}
-<p>Needs moderate rainfall and well-drained soil. Apply nitrogen-rich fertilizer.</p>
-
-{% else %}
-<p>Follow recommended agricultural practices for this crop.</p>
-
-{% endif %}
-
-</div>
-</div>
-
-</div>
-
-<div class="text-center mt-4">
-
-<a href="/cropRecommendation" class="btn btn-success btn-lg">
-🔄 Predict Again
-</a>
-
-</div>
-
+  <div class="text-center mt-4">
+    <a href="/cropRecommendation" class="btn btn-success btn-lg">
+      🔄 Predict Again
+    </a>
+  </div>
 </div>
 
 {% endblock %}
